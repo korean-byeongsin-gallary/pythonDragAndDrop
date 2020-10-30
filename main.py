@@ -11,9 +11,6 @@ import dragAndDrop
 
 form_class = uic.loadUiType("mainUI.ui")[0] # UI file
 
-def str_to_class(str):
-    return eval(str)
-
 class mainWindow(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
@@ -39,13 +36,12 @@ class mainWindow(QMainWindow, form_class) :
 
     def dropEvent(self, e: QDropEvent):
         position = e.pos()
-        print(position)
         # 보내온 데이터를 받기
         # 그랩 당시의 마우스 위치값을 함께 계산하여 위젯 위치 보정
         offset = e.mimeData().data("application/hotspot")
         x, y, code = offset.data().decode('utf-8').split() 
-        print(x,y,code)
         self.blocks[int(code)].move(position - QPoint(int(x), int(y)))
+        self.blocks[int(code)].setVisible(True)
 
         e.setDropAction(Qt.MoveAction)
         e.accept()

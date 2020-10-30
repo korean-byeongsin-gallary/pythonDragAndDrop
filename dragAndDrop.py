@@ -28,6 +28,7 @@ class block(QWidget):
 
     def mouseMoveEvent(self, e: QMouseEvent):
         mime_data = QMimeData()
+        self.setVisible(False)
         mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), self.code))
 
         drag = QDrag(self)
@@ -55,22 +56,19 @@ class blockSpawn(QWidget):
         p.setColor(self.backgroundRole(), Qt.blue)
         self.setPalette(p)
         self.resize(100,100)
-        self.newBlock = None
 
     def mouseMoveEvent(self, e: QMouseEvent):
+        newBlock = self.window.addBlock(self.title,(self.x(),self.y()))
         mime_data = QMimeData()
-        mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), self.newBlock.code))
-        drag = QDrag(self.newBlock)
-        drag.parent = self.newBlock
+        mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), newBlock.code))
+        drag = QDrag(newBlock)
+        drag.parent = newBlock
 
         drag.setMimeData(mime_data)
-
-        pixmap = QPixmap(self.newBlock.size())
-        self.newBlock.render(pixmap)
+        newBlock.setVisible(True)
+        pixmap = QPixmap(newBlock.size())
+        newBlock.render(pixmap)
         drag.setPixmap(pixmap)
 
-        drag.setHotSpot(e.pos() - self.newBlock.rect().topLeft())
+        drag.setHotSpot(e.pos() - newBlock.rect().topLeft())
         drag.exec_(Qt.MoveAction)
-    def mousePressEvent(self, e): # e ; QMouseEvent 
-        print('BUTTON PRESS')
-        self.newBlock = self.window.addBlock(self.title,(self.x(),self.y()))
