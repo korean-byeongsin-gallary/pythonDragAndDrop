@@ -18,26 +18,34 @@ class mainWindow(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
-        self.blc = dragAndDrop.block('sasdf',self.centralwidget)
-        self.blc2 = dragAndDrop.block('sssss',self.centralwidget)
-        #self.blcs = dragAndDrop.blockSpawn(dragAndDrop.block('sssss',self.centralwidget),self.centralWidget)
+        self.blocks = list()
+        self.addBlock('sasdf',(50,500))
+        self.addBlock('sssss',(30,30))
+        dragAndDrop.blockSpawn('asdf',self.centralwidget,self)
         self.initWidget()
     
+    def addBlock(self,name,pos):
+        block = dragAndDrop.block(name,self.centralwidget,len(self.blocks))
+        self.blocks.append(block)
+        block.move(pos[0],pos[1])
+        return block
+        
+
     def initWidget(self):
         self.setAcceptDrops(True)
-        self.blc.move(20,20)
 
     def dragEnterEvent(self, e: QDragEnterEvent):
         e.accept()
 
     def dropEvent(self, e: QDropEvent):
         position = e.pos()
-        print(e.parent)
+        print(position)
         # 보내온 데이터를 받기
         # 그랩 당시의 마우스 위치값을 함께 계산하여 위젯 위치 보정
         offset = e.mimeData().data("application/hotspot")
-        x, y = offset.data().decode('utf-8').split() 
-        self.blc.move(position - QPoint(int(x), int(y)))
+        x, y, code = offset.data().decode('utf-8').split() 
+        print(x,y,code)
+        self.blocks[int(code)].move(position - QPoint(int(x), int(y)))
 
         e.setDropAction(Qt.MoveAction)
         e.accept()
