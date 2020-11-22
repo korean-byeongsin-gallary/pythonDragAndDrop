@@ -16,25 +16,23 @@ class block(QWidget):
         self.layout.setContentsMargins(10,10,5,5)
         self.title = QLabel(title)
         self.text = QLineEdit()
-        self.btn = QPushButton("aaaa")
         self.layout.addWidget(self.title)
         self.layout.addWidget(self.text)
-        self.layout.addWidget(self.btn)
         self.setLayout(self.layout)        
         #배경색 설정
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.red)
         self.setPalette(p)
-        self.setMaximumHeight(40)
-        self.setMinimumHeight(40)
-        self.setMaximumWidth(210)
-        self.setMinimumWidth(210)
+        self.setMaximumHeight(50)
+        self.setMinimumHeight(50)
+        self.setMaximumWidth(200)
+        self.setMinimumWidth(200)
 
     def mouseMoveEvent(self, e: QMouseEvent):
         mime_data = QMimeData()
         self.setVisible(False)
-        self.setParent(None)
+        #self.setParent(None)
         mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), self.code))
 
         drag = QDrag(self)
@@ -50,19 +48,23 @@ class block(QWidget):
         drag.exec_(Qt.MoveAction)
 
 class indentBlock(QWidget):
-    def __init__(self, title, _parent,code):
-        QWidget.__init__(self, parent= _parent,flags=Qt.Widget)
+    def __init__(self, title, _parent, code):
+        QWidget.__init__(self, parent= _parent, flags=Qt.Widget)
+        self.tag = 1
         self.offset = 0
         self.code = code
+        self.depth = 0
+        self.blockList = []
+        #self.outline = QVBoxLayout()
         self.container = QVBoxLayout()
         self.indenting = QHBoxLayout()
         self.codeSpace = QVBoxLayout()
         self.layout = QHBoxLayout()
         self.title = QLabel(title)
         self.text = QLineEdit()
-        self.topSpace = QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.bottomSpace = QSpacerItem(0, 50, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.indentSpace = QSpacerItem(30, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        #self.topSpace = QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.bottomSpace = QSpacerItem(0, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
+        self.indentSpace = QSpacerItem(50, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
         #self.btn = QPushButton("aaaa")
         self.layout.addWidget(self.title)
         self.layout.addWidget(self.text)
@@ -74,6 +76,8 @@ class indentBlock(QWidget):
         #self.container.addItem(self.topSpace)
         self.container.addLayout(self.indenting)
         self.container.addItem(self.bottomSpace)
+        #   self.outline.setContentsMargins(5, 5, 5, 5)
+        #self.outline.addLayout(self.container)
         self.setLayout(self.container)
         #배경색 설정
         self.setAutoFillBackground(True)
@@ -82,13 +86,22 @@ class indentBlock(QWidget):
         self.setPalette(p)
         self.setMaximumWidth(250)
         self.setMinimumWidth(250)
+        self.setMinimumHeight(self.blockCount() * 50 + 50)
+        self.setMaximumHeight(self.blockCount() * 50 + 50)
         self.codeSpace.setSpacing(0)
+        #self.setStyleSheet("border: 3px solid red")
+        #print(type(self))
+        #if type(self.parent()) != "<class 'dragAndDrop.indentBlock'>":
+        #   self.window.indentPos.insert(len(self.window.indentPos), [code, [self.x(), self.y()]] )
+        #    print(self.window.indentPos)
+
     def insertBlock(self, block, pos):
         #self.codeSpace.addWidget(block)
         self.codeSpace.insertWidget(pos, block)
 
     def blockCount(self):
-        return self.codeSpace.count()
+        return len(self.blockList)
+        #return self.codeSpace.count()
 
     def deleteBlock(self,block):
         pass
@@ -129,20 +142,21 @@ class indentBlock(QWidget):
 
 
 class blockSpawn(QWidget):
-    def __init__(self, title, _parent,window):
+    def __init__(self, title, _parent, window):
         QWidget.__init__(self, parent= _parent,flags=Qt.Widget)
-        self.title= title
+        self.title = title
         self.window = window
-
+        self.code = 0
 
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.blue)
         self.setPalette(p)
         self.resize(100,100)
+        self.move(800, 0)
 
     def mouseMoveEvent(self, e: QMouseEvent):
-        newBlock = self.window.addBlock(self.title,(self.x(),self.y()))
+        newBlock = self.window.addBlock(self.code, self.title, (self.x(),self.y()))
         newBlock.setParent(None)
         mime_data = QMimeData()
         mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), newBlock.code))
