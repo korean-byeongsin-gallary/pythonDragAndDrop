@@ -64,7 +64,7 @@ class indentBlock(QWidget):
         self.text = QLineEdit()
         #self.topSpace = QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.bottomSpace = QSpacerItem(0, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-        self.indentSpace = QSpacerItem(50, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.indentSpace = QSpacerItem(40, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
         #self.btn = QPushButton("aaaa")
         self.layout.addWidget(self.title)
         self.layout.addWidget(self.text)

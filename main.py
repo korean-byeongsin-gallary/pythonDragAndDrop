@@ -18,7 +18,6 @@ class mainWindow(QMainWindow, form_class) :
         self.setupUi(self)
         self.blocks = []
         self.indentPos = []
-        #self.addBlock('asdf', (0, 0))
         '''
         self.addBlock(0, 'sasdf', (300, 0))
         self.addBlock(0, 'sssss', (300, 100))
@@ -26,17 +25,10 @@ class mainWindow(QMainWindow, form_class) :
         self.addBlock(2, 'ddd', (300, 300))
         self.addBlock(3, 'ddd', (300, 400))
         '''
-        #print(self.blocks)
-        #dragAndDrop.blockSpawn('asdf',self.centralwidget,self)
         Function.printMom(self.centralwidget,self)
         Function.forMom(self.centralWidget(),self)
-        #print(type(self.blocks[1]))
         self.initWidget()
-        print(type(self.centralWidget()))
 
-
-    #def indentPos(self):
-     #   return self.indentPos()
     def isIndent(self, block):
         if str(type(block)) in ["<class 'dragAndDrop.indentBlock'>", "<class 'Function.forBlk'>"]: return True
         return False
@@ -54,7 +46,6 @@ class mainWindow(QMainWindow, form_class) :
         block.move(pos[0], pos[1])
         if self.isIndent(block):
             self.indentPos.append([block.code, [self.mapFromGlobal(self.pos()).x(), self.mapFromGlobal(self.pos()).y()], block.depth])
-            #print(self.indentPos)
         return block
 
     def initWidget(self):
@@ -91,17 +82,37 @@ class mainWindow(QMainWindow, form_class) :
         li = []
         while True:
             par = par.parent()
-            print(par.code)
+            #print(par.code)
             li.append(par.code)
-            print(li)
+
             if self.codeToPos(par.code)[2] == 0: break
+        #print(li)
         return li
 
+    def ancestor(self, blockCode):
+        #print(self.superList(blockCode))
+        for i in self.superList(blockCode):
+            if self.codeToPos(i)[2] == 0:
+                return i
+        return blockCode
+
+    def maxDepthInIndent(self, blockCode):
+        maxD = -1
+        maxCode = self.ancestor(blockCode)
+        print(self.ancestor(blockCode))
+        print(self.blocks[self.ancestor(blockCode)].blockList)
+        for i in self.blocks[self.ancestor(blockCode)].blockList:
+            if not self.isIndent(self.blocks[i]):
+                continue
+            if self.codeToPos(i)[2] > maxD:
+                maxD = self.codeToPos(i)[2]
+                maxCode = self.codeToPos(i)[0]
+        print(maxCode)
+        return maxCode
 
 
     def dropEvent(self, e: QDropEvent):
         position = e.pos()
-        #print(e.pos().x(), e.pos().y())
         # 보내온 데이터를 받기
         # 그랩 당시의 마우스 위치값을 함께 계산하여 위젯 위치 보정
         offset = e.mimeData().data("application/hotspot")
@@ -112,25 +123,15 @@ class mainWindow(QMainWindow, form_class) :
         inPos = []
         #드롭 위치를 포함하는 indentBlock이 있는지
         isIn = False
-        #print("*", e.pos().x(), e.pos().y())
-        #print(self.indentPos)
         self.blocks[int(code)].move(position - QPoint(int(x), int(y)))
-        #print(self.blocks[int(code)].geometry().x())
-
-        #print(self.indentPos)
         for pos in self.indentPos:
-            #print(pos)
-            #print(-pos[1][0], -pos[1][0] + self.blocks[pos[0]].width(), -pos[1][1], -pos[1][1] + self.blocks[pos[0]].height())
             if pos[0] == int(code): continue
 
 
             if pos[1][0] <= e.pos().x() <= pos[1][0] + self.blocks[pos[0]].width() and pos[1][1] <= e.pos().y() <= pos[1][1] + self.blocks[pos[0]].height():
-                print("***")
                 inPos.append(pos)
                 isIn = True
-        #print(self.indentPos)
         if isIn:
-            print("*", inPos)
             maxDepth = -1
             maxPos = inPos[0]
             for pos in inPos:
@@ -138,84 +139,53 @@ class mainWindow(QMainWindow, form_class) :
                     maxPos = pos
                     maxDepth = pos[2]
 
-
-
             if self.isIndent(self.blocks[int(code)].parent()):
                 self.blocks[int(code)].parent().blockList.remove(int(code))
-                #print(self.blocks[maxPos[0]].blockList)
             self.blocks[maxPos[0]].insertBlock(self.blocks[int(code)], (e.pos().y() - maxPos[1][1]) // 50)
             self.blocks[int(code)].setParent(self.blocks[maxPos[0]])
-            #print(self.blocks[int(code)].parent())
-            print("**************")
-            # print(e.pos().y(), pos[1][1], (e.pos().y() - pos[1][1]) // 50)
             self.blocks[maxPos[0]].blockList.insert((e.pos().y() - maxPos[1][1]) // 50, int(code))
-            #print(self.blocks[maxPos[0]].blockList)
-            # print("**************")
             if self.isIndent(self.blocks[int(code)]):
                 self.setDepth(int(code), self.blocks[int(code)].parent().depth + 1)
-                #print("***")
-                print([self.codeToPos(self.blocks[int(code)].parent().code)[1][0] + 50, self.codeToPos(self.blocks[int(code)].parent().code)[1][1] + (e.pos().y() - maxPos[1][1]) // 50 * 50 + 50])
                 self.setPos(int(code), [self.codeToPos(self.blocks[int(code)].parent().code)[1][0] + 50, self.codeToPos(self.blocks[int(code)].parent().code)[1][1] + (e.pos().y() - maxPos[1][1]) // 50 * 50 + 50])
-                #print("***")
-
-                #self.blocks[maxPos[0]].setMinimumHeight(self.blocks[maxPos[0]].blockCount() * 50 + self.blocks[int(code)].blockCount() * 50 + 50)
-                #self.blocks[maxPos[0]].setMaximumHeight(self.blocks[maxPos[0]].blockCount() * 50 + self.blocks[int(code)].blockCount() * 50 + 50)
-                print(self.blocks[int(code)].parent().depth)
-
 
             else:
-                self.blocks[maxPos[0]].setMinimumHeight(self.blocks[maxPos[0]].blockCount() * 50 + 50)
-                self.blocks[maxPos[0]].setMaximumHeight(self.blocks[maxPos[0]].blockCount() * 50 + 50)
-
-            print(self.superList(int(code)))
+                self.blocks[maxPos[0]].setMinimumHeight(self.blocks[maxPos[0]].blockCount() * 50)
+                self.blocks[maxPos[0]].setMaximumHeight(self.blocks[maxPos[0]].blockCount() * 50)
+            #print(self.superList(int(code)))
 
             for supPos in self.superList(int(code)):
-                temp = self.blocks[supPos].height()
+                #print(supPos)
+                tempH = self.blocks[supPos].height()
+                tempW = self.blocks[supPos].width()
                 if self.isIndent(self.blocks[int(code)]):
-                    self.blocks[supPos].setMinimumHeight(temp + self.blocks[int(code)].blockCount() * 50 + 50)
-                    self.blocks[supPos].setMaximumHeight(temp + self.blocks[int(code)].blockCount() * 50 + 50)
-                    self.blocks[supPos].setMinimumWidth(temp + self.blocks[int(code)].width())
-                    self.blocks[supPos].setMaximumWidth(temp + self.blocks[int(code)].width())
+                    self.blocks[supPos].setMinimumHeight(tempH + self.blocks[int(code)].blockCount() * 50 + 50)
+                    self.blocks[supPos].setMaximumHeight(tempH + self.blocks[int(code)].blockCount() * 50 + 50)
                 else:
-                    self.blocks[supPos].setMinimumHeight(temp + 50)
-                    self.blocks[supPos].setMaximumHeight(temp + 50)
-
-
-            # print("**************")
-            print(self.indentPos)
+                    self.blocks[supPos].setMinimumHeight(tempH + 50)
+                    self.blocks[supPos].setMaximumHeight(tempH + 50)
+                #print(maxDepth)
+                #print(self.codeToPos(supPos))
+                #print(250 + (maxDepth - self.codeToPos(int(code))[2]) * 50 + 50)
+                if supPos == self.maxDepthInIndent(int(code)):
+                    self.blocks[supPos].setMinimumWidth(250 + (maxDepth - self.codeToPos(supPos)[2]) * 50 + 50)
+                    self.blocks[supPos].setMaximumWidth(250 + (maxDepth - self.codeToPos(supPos)[2]) * 50 + 50)
 
             BGDrop = False
 
-
         if BGDrop:
-            #print("**********")
             if self.isIndent(self.blocks[int(code)].parent()):
-                #print("***")
                 self.blocks[int(code)].parent().blockList.remove(int(code))
-                #print("***")
-                print(self.blocks[int(code)].parent().blockList)
-                #print("***")
                 if self.isIndent(self.blocks[int(code)]):
                     self.setDepth(int(code), 0)
                 self.blocks[int(code)].parent().setMinimumHeight(self.blocks[int(code)].parent().blockCount() * 50 + 50)
                 self.blocks[int(code)].parent().setMaximumHeight(self.blocks[int(code)].parent().blockCount() * 50 + 50)
             self.blocks[int(code)].setParent(self.centralwidget)
-            #print(self.indentPos)
-            #self.blocks[int(code)].move(position - QPoint(int(x), int(y)))
-            #
-            #print(self.indentPos)
             if self.isIndent(self.blocks[int(code)]):
-                #print("***", int(code))
                 for i in range(len(self.indentPos)):
                     self.setDepth(int(code), 0)
                     self.setPos(int(code), [self.blocks[int(code)].geometry().x(), self.blocks[int(code)].geometry().y()])
-            print(self.indentPos)
-                #print(self.window.indentPos)
-
 
         self.blocks[int(code)].setVisible(True)
-        #print(self.blocks[2].codeSpace.itemAt(0))
-
 
         e.setDropAction(Qt.MoveAction)
         e.accept()
