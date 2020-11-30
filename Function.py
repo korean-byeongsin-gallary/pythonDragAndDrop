@@ -8,11 +8,16 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtCore import QMimeData
 from dragAndDrop import *
 
+def loadStyle(path):
+    with open(path,'r') as fh:
+        return fh.read()
+
 class printBlk(block):
 
     def __init__(self, _parent, code):
         block.__init__(self, "print" ,_parent, code)
         self.text = "print"
+        self.setStyleSheet(loadStyle("styles/print.qss"))
 
     def getText(self):
         pass
@@ -49,6 +54,7 @@ class forBlk(indentBlock):
         self.laterText = QLineEdit()
         self.layout.addWidget(self.laterText)
         self.text = ""
+        self.setStyleSheet(loadStyle("styles/while.qss"))
 
 class forMom(blockSpawn):
     def __init__(self, _parent, window):

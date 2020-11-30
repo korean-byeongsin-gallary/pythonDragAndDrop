@@ -18,6 +18,7 @@ class mainWindow(QMainWindow, form_class) :
         self.setupUi(self)
         self.blocks = []
         self.indentPos = []
+        self.maxWidthBlocks = []
         '''
         self.addBlock(0, 'sasdf', (300, 0))
         self.addBlock(0, 'sssss', (300, 100))
@@ -124,66 +125,67 @@ class mainWindow(QMainWindow, form_class) :
         #드롭 위치를 포함하는 indentBlock이 있는지
         isIn = False
         self.blocks[int(code)].move(position - QPoint(int(x), int(y)))
+        blkW = self.blocks[int(code)].width()
+        blkH = self.blocks[int(code)].height()
         for pos in self.indentPos:
             if pos[0] == int(code): continue
-
-
             if pos[1][0] <= e.pos().x() <= pos[1][0] + self.blocks[pos[0]].width() and pos[1][1] <= e.pos().y() <= pos[1][1] + self.blocks[pos[0]].height():
                 inPos.append(pos)
                 isIn = True
         if isIn:
-            maxDepth = -1
-            maxPos = inPos[0]
+            maxDepth = -1 # 드롭 위치를 포함하는 indentBlock 중 가장 큰 Depth
+            maxPos = inPos[0] # 드롭 위치를 포함하는 indentBlock 중 가장 큰 Depth를 가진 inDentBlock의 Pos
+            #maxPos, MaxDepth 정하기
             for pos in inPos:
                 if pos[2] > maxDepth:
                     maxPos = pos
                     maxDepth = pos[2]
+            # 그 전 부모에게서 드롭한 블록을 제거, 그에 따른 크기 조정
 
             if self.isIndent(self.blocks[int(code)].parent()):
                 self.blocks[int(code)].parent().blockList.remove(int(code))
+                for supPos in self.superList(int(code)):
+                    tempH = self.blocks[supPos].height()
+                    self.blocks[supPos].setMinimumHeight(tempH - blkH)
+                    self.blocks[supPos].setMaximumHeight(tempH - blkH)
+            #가장 깊은 depth을 가진 indentBlock의 blockList에 insert, 그 후 새로운 부모로 설정
             self.blocks[maxPos[0]].insertBlock(self.blocks[int(code)], (e.pos().y() - maxPos[1][1]) // 50)
             self.blocks[int(code)].setParent(self.blocks[maxPos[0]])
             self.blocks[maxPos[0]].blockList.insert((e.pos().y() - maxPos[1][1]) // 50, int(code))
+            #드롭한 블록이 indentBlock이라면 Depth을 새 부모의 Depth + 1 로 설정, Pos도 그에 따라 설정
             if self.isIndent(self.blocks[int(code)]):
                 self.setDepth(int(code), self.blocks[int(code)].parent().depth + 1)
                 self.setPos(int(code), [self.codeToPos(self.blocks[int(code)].parent().code)[1][0] + 50, self.codeToPos(self.blocks[int(code)].parent().code)[1][1] + (e.pos().y() - maxPos[1][1]) // 50 * 50 + 50])
-
-            else:
-                self.blocks[maxPos[0]].setMinimumHeight(self.blocks[maxPos[0]].blockCount() * 50)
-                self.blocks[maxPos[0]].setMaximumHeight(self.blocks[maxPos[0]].blockCount() * 50)
-            #print(self.superList(int(code)))
-
+            #부모의 조상까지 걸쳐 올라가면서 Width를 증가시킴
             for supPos in self.superList(int(code)):
-                #print(supPos)
                 tempH = self.blocks[supPos].height()
                 tempW = self.blocks[supPos].width()
-                if self.isIndent(self.blocks[int(code)]):
-                    self.blocks[supPos].setMinimumHeight(tempH + self.blocks[int(code)].blockCount() * 50 + 50)
-                    self.blocks[supPos].setMaximumHeight(tempH + self.blocks[int(code)].blockCount() * 50 + 50)
-                else:
-                    self.blocks[supPos].setMinimumHeight(tempH + 50)
-                    self.blocks[supPos].setMaximumHeight(tempH + 50)
-                #print(maxDepth)
-                #print(self.codeToPos(supPos))
-                #print(250 + (maxDepth - self.codeToPos(int(code))[2]) * 50 + 50)
-                if supPos == self.maxDepthInIndent(int(code)):
-                    self.blocks[supPos].setMinimumWidth(250 + (maxDepth - self.codeToPos(supPos)[2]) * 50 + 50)
-                    self.blocks[supPos].setMaximumWidth(250 + (maxDepth - self.codeToPos(supPos)[2]) * 50 + 50)
+                self.blocks[supPos].setMinimumHeight(tempH + blkH)
+                self.blocks[supPos].setMaximumHeight(tempH + blkH)
+                print(tempW, blkW + (maxPos[2] - self.codeToPos(supPos)[2]) * 50 + 50)
+                self.blocks[supPos].setMinimumWidth(max(tempW, blkW + (maxPos[2] - self.codeToPos(supPos)[2]) * 50 + 50))
+                self.blocks[supPos].setMaximumWidth(max(tempW, blkW + (maxPos[2] - self.codeToPos(supPos)[2]) * 50 + 50))
+                #가장 큰 너비를 가지는 block
+                #if self.codeToPos(supPos)[2] == 0 and tempW < blkW + (maxPos[2] - self.codeToPos(supPos)[2]) * 50 + 50:
+
+
 
             BGDrop = False
 
         if BGDrop:
             if self.isIndent(self.blocks[int(code)].parent()):
                 self.blocks[int(code)].parent().blockList.remove(int(code))
+                for supPos in self.superList(int(code)):
+                    tempH = self.blocks[supPos].height()
+                    self.blocks[supPos].setMinimumHeight(tempH - blkH)
+                    self.blocks[supPos].setMaximumHeight(tempH - blkH)
                 if self.isIndent(self.blocks[int(code)]):
                     self.setDepth(int(code), 0)
-                self.blocks[int(code)].parent().setMinimumHeight(self.blocks[int(code)].parent().blockCount() * 50 + 50)
-                self.blocks[int(code)].parent().setMaximumHeight(self.blocks[int(code)].parent().blockCount() * 50 + 50)
+                #여기에 뺄 때 크기 줄어드는 코드 완성하기
             self.blocks[int(code)].setParent(self.centralwidget)
             if self.isIndent(self.blocks[int(code)]):
-                for i in range(len(self.indentPos)):
-                    self.setDepth(int(code), 0)
-                    self.setPos(int(code), [self.blocks[int(code)].geometry().x(), self.blocks[int(code)].geometry().y()])
+                self.setDepth(int(code), 0)
+                self.setPos(int(code), [self.blocks[int(code)].geometry().x(), self.blocks[int(code)].geometry().y()])
 
         self.blocks[int(code)].setVisible(True)
 
