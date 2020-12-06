@@ -6,6 +6,8 @@ class blockCode(Enum):
     PRINT =2
     FOR=3
     VARGET = 4
+    CLASS = 5
+    WHILE = 6
 
 class dropType(Enum):
     BACKGROUND = 0

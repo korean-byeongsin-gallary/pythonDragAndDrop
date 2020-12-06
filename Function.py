@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import QPoint
 from PyQt5.QtCore import Qt
 
+from enums import *
 from PyQt5.QtCore import QMimeData
 from dragAndDrop import *
 
@@ -14,18 +15,18 @@ def loadStyle(path):
 
 class printBlk(block):
 
-    def __init__(self, _parent, code):
-        block.__init__(self, "print" ,_parent, code)
+    def __init__(self, parent, code):
+        block.__init__(self, "print" ,parent, code)
         self.text = "print"
         self.setStyleSheet(loadStyle("styles/print.qss"))
 
     def getText(self):
         pass
 
-class printMom(blockSpawn):
-    def __init__(self, _parent, window,code):
-        blockSpawn.__init__(self, "print", _parent, window,code)
-        '''self.setMaximumHeight(500)
+'''class printMom(blockSpawn):
+    def __init__(self, _parent = None, window,code):
+        blockSpawn.__init__(self, "print", _parent, window ,code)
+        self.setMaximumHeight(500)
         self.setMinimumHeight(500)
         self.setMaximumWidth(2000)
         self.setMinimumWidth(2000)
@@ -40,14 +41,30 @@ class forBlk(indentBlock):
         self.layout.addWidget(QLabel("in"))
         self.laterText = QLineEdit()
         self.layout.addWidget(self.laterText)
-        self.setStyleSheet(loadStyle("styles/while.qss"))
+        self.setStyleSheet(loadStyle("styles/loop.qss"))
 
         self.text = ""
 
-class forMom(blockSpawn):
+class classBlk(indentBlock):
+
+    def __init__(self, _parent, code):
+        indentBlock.__init__(self, "class", _parent, code)
+        self.setStyleSheet(loadStyle("styles/class.qss"))
+
+        self.text = ""
+
+class whileBlk(indentBlock):
+
+    def __init__(self, _parent, code):
+        indentBlock.__init__(self, "while", _parent, code)
+        self.setStyleSheet(loadStyle("styles/loop.qss"))
+
+        self.text = ""
+
+'''class forMom(blockSpawn):
     def __init__(self, _parent, window, code):
         blockSpawn.__init__(self, "print", _parent, window, code)
-        '''self.setMaximumWidth(250)
+        self.setMaximumWidth(250)
         self.setMinimumWidth(250)
         self.setMinimumHeight(50)
         self.setMaximumHeight(50)

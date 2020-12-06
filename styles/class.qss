@@ -1,0 +1,16 @@
+indentBlock
+{
+color: white;
+background-color: #009e73;
+border-radius: 3px;
+border-style: solid;
+border-width: 1px;
+border-color: white;
+}
+QLabel, QLineEdit, .QWidget
+{
+    color: white;
+    background-color: #009e73;
+    border-radius: 3px;
+    border-style: solid;
+}

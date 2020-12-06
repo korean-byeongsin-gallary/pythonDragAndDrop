@@ -110,7 +110,15 @@ class indentBlock(QWidget):
         #if type(self.parent()) != "<class 'dragAndDrop.indentBlock'>":
         #   self.window.indentPos.insert(len(self.window.indentPos), [code, [self.x(), self.y()]] )
         #    print(self.window.indentPos)
+    def initWidget(self):
+        self.setAcceptDrops(True)
 
+    def dragEnterEvent(self, e: QDragEnterEvent):
+        print("BAaaa")
+        e.accept()
+
+    def dropEvent(self, e: QDropEvent):
+        print("BAaaa")
 
     def insertBlock(self, block, pos):
         #self.codeSpace.addWidget(block)
@@ -169,14 +177,14 @@ class varGetter(base):
         pass  
 
 class blockSpawn(QWidget):
-    def __init__(self, title, _parent, window, code):
-        QWidget.__init__(self, parent= _parent,flags=Qt.Widget)
-        self.title = title
+    def __init__(self, parent):#,title, window, code):
+        QWidget.__init__(self, parent= parent,flags=Qt.Widget)
+
+    def setupUi(self, window, code):
         self.window = window
         self.code = code
-
         self.layout = QHBoxLayout()
-        dummy =  self.window.addBlock(self.code, self.title, (self.x(),self.y()))
+        dummy =  self.window.addBlock(self.code, (self.x(),self.y()))
         pixmap = QPixmap(dummy.size())
         dummy.render(pixmap)
         dummy.setVisible(False)
@@ -185,9 +193,13 @@ class blockSpawn(QWidget):
         self.img.setPixmap(pixmap)
         self.layout.addWidget(self.img)
         self.setLayout(self.layout)
+        self.setMaximumHeight(pixmap.height()+50)
+        self.setMinimumHeight(pixmap.height()+50)
+        self.setMaximumWidth(pixmap.width()+50)
+        self.setMinimumWidth(pixmap.width()+50)
 
     def mouseMoveEvent(self, e: QMouseEvent):
-        newBlock = self.window.addBlock(self.code, self.title, (self.x(),self.y()))
+        newBlock = self.window.addBlock(self.code, (self.x(),self.y()))
         newBlock.setParent(None)
         mime_data = QMimeData()
         mime_data.setData("application/hotspot", b"%d %d %d" % (e.x(), e.y(), newBlock.code))
@@ -202,3 +214,10 @@ class blockSpawn(QWidget):
 
         drag.setHotSpot(e.pos() - newBlock.rect().topLeft())
         drag.exec_(Qt.MoveAction)
+
+class trashCan(QWidget):
+    def __init__(self, parent):
+        QWidget.__init__(self, parent= parent,flags=Qt.Widget)
+    
+    def dropEvent(self, e: QDropEvent):
+        pass

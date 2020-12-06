@@ -16,7 +16,208 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Triangular</enum>
+      </property>
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
+      <widget class="QWidget" name="statements">
+       <attribute name="title">
+        <string>Statememts</string>
+       </attribute>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>291</width>
+          <height>761</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>289</width>
+           <height>759</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>291</width>
+            <height>751</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="blockSpawn" name="printSpawn" native="true"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QWidget" name="widget_3" native="true"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QWidget" name="widget_4" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Definitions</string>
+       </attribute>
+       <widget class="QScrollArea" name="scrollArea_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>291</width>
+          <height>761</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>289</width>
+           <height>759</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>291</width>
+            <height>751</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="3" column="0">
+            <widget class="QWidget" name="widget_5" native="true"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="blockSpawn" name="classSpawn" native="true"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QWidget" name="widget_6" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Loops</string>
+       </attribute>
+       <widget class="QScrollArea" name="scrollArea_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>291</width>
+          <height>761</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_3">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>289</width>
+           <height>759</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>291</width>
+            <height>751</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="2" column="0">
+            <widget class="QWidget" name="widget_8" native="true"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="blockSpawn" name="forSpawn" native="true"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="blockSpawn" name="whileSpawn" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="dropPlace" name="dropWindow">
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
+      <widget class="QWidget" name="trashCan" native="true">
+       <property name="geometry">
+        <rect>
+         <x>540</x>
+         <y>680</y>
+         <width>120</width>
+         <height>80</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -29,6 +230,20 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>blockSpawn</class>
+   <extends>QWidget</extends>
+   <header>dragAndDrop.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>dropPlace</class>
+   <extends>QFrame</extends>
+   <header>main.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
