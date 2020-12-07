@@ -1,0 +1,9 @@
+.QWidget
+{
+    color: white;
+    background-color: red;
+    border-width: 5px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+}
