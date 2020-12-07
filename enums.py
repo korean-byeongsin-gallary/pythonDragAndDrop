@@ -5,9 +5,12 @@ class blockCode(Enum):
     INDENT=1
     PRINT =2
     FOR=3
-    VARGET = 4
+    OPER = 4
     CLASS = 5
     WHILE = 6
+    IF = 7
+    DEF = 8
+    RETURN = 9
 
 class dropType(Enum):
     BACKGROUND = 0

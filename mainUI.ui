@@ -39,7 +39,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="statements">
        <attribute name="title">
@@ -79,11 +79,11 @@
            <item row="0" column="0">
             <widget class="blockSpawn" name="printSpawn" native="true"/>
            </item>
-           <item row="2" column="0">
-            <widget class="QWidget" name="widget_3" native="true"/>
-           </item>
            <item row="1" column="0">
-            <widget class="QWidget" name="widget_4" native="true"/>
+            <widget class="blockSpawn" name="returnSpawn" native="true"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="blockSpawn" name="lenSpawn" native="true"/>
            </item>
           </layout>
          </widget>
@@ -132,7 +132,7 @@
             <widget class="blockSpawn" name="classSpawn" native="true"/>
            </item>
            <item row="2" column="0">
-            <widget class="QWidget" name="widget_6" native="true"/>
+            <widget class="blockSpawn" name="defSpawn" native="true"/>
            </item>
           </layout>
          </widget>
@@ -188,6 +188,55 @@
         </widget>
        </widget>
       </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Logic</string>
+       </attribute>
+       <widget class="QScrollArea" name="scrollArea_4">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>291</width>
+          <height>761</height>
+         </rect>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>289</width>
+           <height>759</height>
+          </rect>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget_4">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>291</width>
+            <height>751</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="2" column="0">
+            <widget class="QWidget" name="widget_9" native="true"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="blockSpawn" name="ifSpawn" native="true"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="blockSpawn" name="operSpawn" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </widget>
+      </widget>
      </widget>
     </item>
     <item>
@@ -227,8 +276,56 @@
      <height>26</height>
     </rect>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::RightToLeft</enum>
+   </property>
+   <widget class="QMenu" name="menuTo_code">
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionTo_code"/>
+    <addaction name="actionsave"/>
+    <addaction name="actionDelete_all"/>
+   </widget>
+   <widget class="QMenu" name="menuRun">
+    <property name="title">
+     <string>Run</string>
+    </property>
+    <addaction name="actionRUN"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string> </string>
+    </property>
+   </widget>
+   <addaction name="menuTo_code"/>
+   <addaction name="menu"/>
+   <addaction name="menuRun"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionTo_code">
+   <property name="text">
+    <string>To code</string>
+   </property>
+  </action>
+  <action name="actionsave">
+   <property name="text">
+    <string>save</string>
+   </property>
+  </action>
+  <action name="actionDelete_all">
+   <property name="text">
+    <string>Delete all</string>
+   </property>
+  </action>
+  <action name="actionRUN">
+   <property name="text">
+    <string>RUN!!</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

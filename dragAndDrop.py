@@ -37,23 +37,19 @@ class base(QWidget):
         pixmap = QPixmap(self.size())
         self.render(pixmap)
         drag.setPixmap(pixmap)
-
         drag.setHotSpot(e.pos() - self.rect().topLeft())
         drag.exec_(Qt.MoveAction)
 
 class block(base):
     def __init__(self, title, _parent,code):
         base.__init__(self, _parent, code)
+        self.globalWidth = 200
         self.title = QLabel(title)
-        self.text = QLineEdit()
+        self.textInput = QLineEdit()
         self.layout.addWidget(self.title)
-        self.layout.addWidget(self.text)
+        self.layout.addWidget(self.textInput)
         #self.setLayout(self.layout)        
         #배경색 설정
-        self.setAutoFillBackground(True)
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.red)
-        self.setPalette(p)
         self.setMaximumHeight(50)
         self.setMinimumHeight(50)
         self.setMaximumWidth(200)
@@ -67,49 +63,37 @@ class indentBlock(QWidget):
         self.code = code
         self.depth = 0
         self.blockList = []
-        #self.outline = QVBoxLayout()
+        self.globalWidth = 250
+        self.maxWidthBlocks = []
         self.container = QVBoxLayout()
+        self.container.setSpacing(0)
+        self.container.setContentsMargins(0, 0, 0, 50)
         self.indenting = QHBoxLayout()
         self.codeSpace = QVBoxLayout()
         self.layout = QHBoxLayout()
+        self.layout.setContentsMargins(10, 10, 10, 10)
+        self.layout.setSpacing(10)
         self.title = QLabel(title)
-        self.text = QLineEdit()
-        #self.topSpace = QSpacerItem(0, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.bottomSpace = QWidget()#QSpacerItem(0, 50, QSizePolicy.Maximum, QSizePolicy.Expanding)
-        self.indentSpace = QWidget()#QSpacerItem(50, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.bottomSpace.setMinimumHeight(30)
-        self.bottomSpace.setMaximumHeight(30)
-        self.indentSpace.setMinimumWidth(30)
-        self.indentSpace.setMaximumWidth(30)
-        #self.btn = QPushButton("aaaa")
+        self.textInput = QLineEdit()
+        self.indentSpace = QWidget()
+        self.indentSpace.setMinimumWidth(50)
+        self.indentSpace.setMaximumWidth(50)
+        self.indentSpace.setMinimumHeight(0)
+        self.indentSpace.setMaximumHeight(0)
         self.layout.addWidget(self.title)
-        self.layout.addWidget(self.text)
-        #self.layout.addWidget(self.btn)
+        self.layout.addWidget(self.textInput)
         self.indenting.addWidget(self.indentSpace)
-        #self.codeSpace.addWidget()
         self.indenting.addLayout(self.codeSpace)
         self.container.addLayout(self.layout)
-        #self.container.addItem(self.topSpace)
         self.container.addLayout(self.indenting)
-        self.container.addWidget(self.bottomSpace)
-        #   self.outline.setContentsMargins(5, 5, 5, 5)
-        #self.outline.addLayout(self.container)
         self.setLayout(self.container)
         #배경색 설정
-        self.setAutoFillBackground(True)
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.blue)
-        self.setPalette(p)
         self.setMaximumWidth(250)
         self.setMinimumWidth(250)
-        self.setMinimumHeight(self.blockCount() * 50 + 80)
-        self.setMaximumHeight(self.blockCount() * 50 + 80)
+        self.setMinimumHeight(self.blockCount() * 50 + 100)
+        self.setMaximumHeight(self.blockCount() * 50 + 100)
         self.codeSpace.setSpacing(0)
-        #self.setStyleSheet("border: 3px solid red")
-        #print(type(self))
-        #if type(self.parent()) != "<class 'dragAndDrop.indentBlock'>":
-        #   self.window.indentPos.insert(len(self.window.indentPos), [code, [self.x(), self.y()]] )
-        #    print(self.window.indentPos)
+
     def initWidget(self):
         self.setAcceptDrops(True)
 
@@ -157,25 +141,6 @@ class indentBlock(QWidget):
         drag.setHotSpot(e.pos() - self.rect().topLeft())
         drag.exec_(Qt.MoveAction)
 
-'''
-    def dropEvent(self, e: QDropEvent):
-        source = e.source()
-        print(source)
-        # 보내온 데이터를 받기
-        # 그랩 당시의 마우스 위치값을 함께 계산하여 위젯 위치 보정
-        offset = e.mimeData().data("application/hotspot")
-        x, y, code = offset.data().decode('utf-8').split()
-        #self.blocks[int(code)].setParent(self)
-        self.blocks[int(code)].setVisible(True)
-
-        e.setDropAction(Qt.MoveAction)
-        e.accept()
-'''
-
-class varGetter(base):
-    def __init__(self, _parent,code):
-        pass  
-
 class blockSpawn(QWidget):
     def __init__(self, parent):#,title, window, code):
         QWidget.__init__(self, parent= parent,flags=Qt.Widget)
@@ -185,6 +150,8 @@ class blockSpawn(QWidget):
         self.code = code
         self.layout = QHBoxLayout()
         dummy =  self.window.addBlock(self.code, (self.x(),self.y()))
+        self.window.indentPos = []
+        self.window.blocks = []
         pixmap = QPixmap(dummy.size())
         dummy.render(pixmap)
         dummy.setVisible(False)

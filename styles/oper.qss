@@ -1,16 +1,16 @@
-indentBlock
+block
 {
 color: white;
-background-color: #009e73;
+background-color: #00aaaa;
 border-radius: 10px;
 border-style: solid;
 border-width: 2px;
 border-color: white;
 }
-QLabel, .QWidget
+QLabel, QComboBox, .QWidget
 {
     color: white;
-    background-color: #009e73;
+    background-color: #00aaaa;
     border-radius: 3px;
     border-style: solid;
 }
