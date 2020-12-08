@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .QWidget
 {
     color: white;
@@ -6,4 +7,14 @@
     border-radius: 5px;
     border-style: solid;
     border-color: black;
+=======
+.QWidget
+{
+    color: white;
+    background-color: red;
+    border-width: 5px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+>>>>>>> e6010ab715b125a75df094cdc909e77fb3ace71e
 }

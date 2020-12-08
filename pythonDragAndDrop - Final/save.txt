@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 print(aaa)
+=======
+print(aaa)
+>>>>>>> e6010ab715b125a75df094cdc909e77fb3ace71e
